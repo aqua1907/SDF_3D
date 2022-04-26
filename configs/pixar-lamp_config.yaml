@@ -1,0 +1,23 @@
+chunk_size: 16384
+batch_size: 1
+epochs: 1000
+init_lr: 0.001
+loss: 'l1_loss'
+scan_resolution: 1500
+num_points: 500000
+
+# Model
+# dense_layers: [512, 512, 512, 512, 512]
+dense_layers: [256, 256, 256, 256, 256, 256]
+# dense_layers: [128, 128, 128, 128, 128]
+in_features: 3
+out_features: 1
+initializer: "siren"
+w0: 1.0
+w0_initial: 30.0
+c: 6
+weight_decay: 0.0005
+
+# SDF value clipping
+clip_values: True
+min_max: 0.1
