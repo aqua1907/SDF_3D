@@ -37,7 +37,7 @@ Videos:
 | **Coffee-table** | 0.835 MB | 0.18 | 32768 | 0.40 ms  | 0.01 us| 330K |
 
 
-#Overview
+# Overview
 1) Used 8 different meshes. The most simple (Pixar-lamp) has 5,3K vertices. The most complex (Spaceship) has (330K)
 2) Used Siren network from this [paper](https://arxiv.org/pdf/2006.09661v1.pdf)
 3) Correct combination of LR and batch size is individual for each input mesh
