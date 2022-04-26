@@ -1,7 +1,7 @@
 # Researching
 Papers:
  - [Implicit Neural Representations with Periodic Activation Functions](https://arxiv.org/pdf/2006.09661v1.pdf)
- - [DeepSDF]([https://arxiv.org/pdf/1901.05103.pdf])
+ - [DeepSDF](https://arxiv.org/pdf/1901.05103.pdf)
  - [DIST](https://arxiv.org/pdf/1911.13225.pdf)
  - [SDF-SRN](https://arxiv.org/pdf/2010.10505.pdf)
  - [Acorn](https://arxiv.org/pdf/2105.02788.pdf)
