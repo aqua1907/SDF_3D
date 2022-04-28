@@ -91,7 +91,7 @@ def train(opt, obj_path, device, checkpoint, val_data, weights=None):
 
         if best_loss > avg_loss:
             best_loss = avg_loss
-            utils.save_checkpoint(checkpoint / 'best_new.pth', epoch + 1, model, optimizer, scheduler)
+            utils.save_checkpoint(checkpoint / 'best_sirenLoss.pth', epoch + 1, model, optimizer, scheduler)
 
         if (epoch + 1) % 20 == 0:
             model.eval()
