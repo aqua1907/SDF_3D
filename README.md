@@ -1,7 +1,7 @@
 # Researching
 Papers:
  - [Implicit Neural Representations with Periodic Activation Functions](https://arxiv.org/pdf/2006.09661v1.pdf)
- - [DeepSDF]([https://arxiv.org/pdf/1901.05103.pdf])
+ - [DeepSDF](https://arxiv.org/pdf/1901.05103.pdf)
  - [DIST](https://arxiv.org/pdf/1911.13225.pdf)
  - [SDF-SRN](https://arxiv.org/pdf/2010.10505.pdf)
  - [Acorn](https://arxiv.org/pdf/2105.02788.pdf)
@@ -30,14 +30,14 @@ Videos:
 | **Chair** | 0.886 | 0.63 MB | 16384  | 0.40 ms| 0.02 us | 330K |
 | **Handgun** | 0.901 | 0.31 MB | 1024 | 0.38 ms | 0.38 us | 330K | 
 | **Pixar-lamp** | 0.877 | 0.12 MB |  16384 | 0.38 ms  | 0.02 us| 330K |
-| **Plane** | 0.918 | 1.53 MB | 16384 | 0.39 | 0.02 us | 330K |
-| **Raven** | 0.704 | 2.53 MB | 16384 | 0.39 | 0.02 us | 330K |
-| **Spaceship** | 0.918 MB | 8.73 MB | 16384 | 0.39 ns | 0.02 us | 330K |
+| **Plane** | 0.918 | 1.53 MB | 16384 | 0.39 ms | 0.02 us | 330K |
+| **Raven** | 0.704 | 2.53 MB | 16384 | 0.39 ms | 0.02 us | 330K |
+| **Spaceship** | 0.918 | 8.73 MB | 16384 | 0.39 ms | 0.02 us | 330K |
 | **Sword** | 0.733 | 0.17 MB | 10240 | 0.40 ms | 0.04 us | 330K |
-| **Coffee-table** | 0.835 MB | 0.18 | 32768 | 0.40 ms  | 0.01 us| 330K |
+| **Coffee-table** | 0.835  | 0.18 MB | 32768 | 0.40 ms  | 0.01 us| 330K |
 
 
-#Overview
+# Overview
 1) Used 8 different meshes. The most simple (Pixar-lamp) has 5,3K vertices. The most complex (Spaceship) has (330K)
 2) Used Siren network from this [paper](https://arxiv.org/pdf/2006.09661v1.pdf)
 3) Correct combination of LR and batch size is individual for each input mesh
