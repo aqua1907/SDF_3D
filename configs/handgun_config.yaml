@@ -1,8 +1,8 @@
-chunk_size: 1024
+chunk_size: 16384
 batch_size: 1
 epochs: 1000
-init_lr: 0.001
-loss: 'l1_loss'
+init_lr: 0.01
+loss: 'siren_loss'
 scan_resolution: 1500
 num_points: 650000
 

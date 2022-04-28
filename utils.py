@@ -5,7 +5,7 @@ import trimesh
 import random
 import torch.backends.cudnn as cudnn
 
-from mesh_to_sdf import scale_to_unit_sphere, mesh_to_sdf
+from mesh_to_sdf import scale_to_unit_sphere, mesh_to_sdf, sample_sdf_near_surface
 from mesh_to_sdf.surface_point_cloud import create_from_scans
 from datetime import datetime
 import torch.utils.benchmark as benchmark
@@ -17,7 +17,7 @@ def F1_metric(model, data, batch_size, device):
     points, gt_sdf_sign = data
     with torch.no_grad():
         points = torch.from_numpy(points).to(device).float()
-        sdf_pred = [model(batch).cpu().numpy() for batch in torch.chunk(points, batch_size)]
+        sdf_pred = [model(batch)[0].cpu().numpy() for batch in torch.chunk(points, batch_size)]
         sdf_pred = np.concatenate(sdf_pred)
         sdf_pred = np.squeeze(sdf_pred)
         pred_sdf_sign = np.sign(sdf_pred)
@@ -52,7 +52,7 @@ def save_checkpoint(path, epoch, model, optimizer, scheduler):
     torch.save(save_data, path)
 
 
-def create_gt_data(obj_path, eps=0.0002, scan_resolution=1000):
+def create_gt_data(obj_path, scan_resolution=1000):
     filename = str(obj_path).replace('.obj', '')
     filename = filename + "_gt"
     npy_path = filename + '.npy'
@@ -146,4 +146,4 @@ def model_benchmark(opt, model, data, device):
 
 
 if __name__ == '__main__':
-    points, gt_sdf_sign = create_gt_data(r'objects/sword.obj', eps=1e-3, scan_resolution=500)
+    pass

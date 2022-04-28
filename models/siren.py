@@ -124,7 +124,8 @@ class SIREN(nn.Module):
         assert len(layers) >= 1, 'layers should not be empty'
 
     def forward(self, X):
-        return self.network(X)
+        coords = X.clone().detach().requires_grad_(True)
+        return self.network(coords), coords
 
 
 if __name__ == "__main__":

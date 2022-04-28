@@ -5,11 +5,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 import yaml
+from loss import siren_loss_sdf
 
 import utils
 from tqdm import tqdm
 from torch.utils.data import DataLoader
-from dataset import SDFDataset
+from dataset import SDFDataset, PointCloud
 from models.siren import SIREN
 
 SEED = 123
@@ -18,9 +19,10 @@ utils.init_seeds(SEED)
 
 def train(opt, obj_path, device, checkpoint, val_data, weights=None):
     # Create dataset and dataloader
-    dataset = SDFDataset(obj_path, opt['chunk_size'],
-                         opt['num_points'], opt['scan_resolution'],
-                         opt['clip_values'], opt['min_max'])
+    # dataset = SDFDataset(obj_path, opt['chunk_size'],
+    #                      opt['num_points'], opt['scan_resolution'],
+    #                      opt['clip_values'], opt['min_max'])
+    dataset = PointCloud(obj_path, opt['chunk_size'])
     train_loader = DataLoader(dataset, batch_size=opt['batch_size'], shuffle=True, num_workers=0)
 
     # Initialise model
@@ -41,7 +43,7 @@ def train(opt, obj_path, device, checkpoint, val_data, weights=None):
         criterion = nn.MSELoss()
 
     optimizer = torch.optim.Adam(model.parameters(), opt['init_lr'])
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=30, verbose=True,
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', factor=0.5, patience=2, verbose=True,
                                                            threshold=0.0001, threshold_mode='abs')
 
     if weights is not None:
@@ -63,17 +65,21 @@ def train(opt, obj_path, device, checkpoint, val_data, weights=None):
         loop.set_description(f"Epoch [{epoch + 1}/{epochs}]")
 
         for i, data in loop:
-            points, sdf_target = data
-            points = points.to(device).squeeze(0)
-            sdf_target = sdf_target.to(device).permute(1, 0)
+            points, sdf_target, gt_normals = data
+            points = points.to(device)
+            sdf_target = sdf_target.to(device)
+            gt_normals = gt_normals.to(device)
 
             optimizer.zero_grad()
 
-            sdf_pred = model(points)
+            sdf_pred, coords = model(points)
             if opt['clip_values']:
                 sdf_pred = torch.clamp(sdf_pred, -opt['min_max'], opt['min_max'])
 
-            loss = criterion(sdf_pred, sdf_target)
+            if opt['loss'] == 'siren_loss':
+                loss = siren_loss_sdf(coords, sdf_pred, sdf_target, gt_normals)
+            else:
+                loss = criterion(sdf_pred, sdf_target)
             loss.backward()
             optimizer.step()
 
@@ -85,18 +91,17 @@ def train(opt, obj_path, device, checkpoint, val_data, weights=None):
 
         if best_loss > avg_loss:
             best_loss = avg_loss
-            utils.save_checkpoint(checkpoint / 'best.pth', epoch + 1, model, optimizer, scheduler)
+            utils.save_checkpoint(checkpoint / 'best_new.pth', epoch + 1, model, optimizer, scheduler)
 
-        if (epoch + 1) % 150 == 0:
+        if (epoch + 1) % 20 == 0:
             model.eval()
             f1_value = utils.F1_metric(model, val_data, opt['chunk_size'], device)
             print(f"\nF1 = {f1_value:.3f}")
-
-        scheduler.step(avg_loss)
+            scheduler.step(f1_value)
 
 
 if __name__ == "__main__":
-    obj_path = Path(r'objects/sword.obj')
+    obj_path = Path(r'objects/handgun.obj')
     obj_name = obj_path.name
     obj_name = obj_name.split('.')[0]
     ckpt_dir = Path(rf'checkpoints/{obj_name}')
